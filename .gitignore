@@ -1,0 +1,45 @@
+# Unity
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/.vs/
+/*.csproj
+/*.sln
+/*.unityproj
+/*.pidb
+/*.booproj
+/*.svd
+/*.pdb
+/*.mdb
+/*.opendb
+/*.VC.db
+/*.userprefs
+
+# Asset meta files (Unity generates these, keep them)
+# !*.meta
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# OpenCode
+.tmp/
+
+# miniaudio build artifacts
+src/audio/miniaudio/build/
+
+# Build outputs
+bin/
+out/
+dist/
