@@ -31,12 +31,15 @@ git clone https://github.com/yomua-cat/BUGs.git
 ## 文档
 
 - [项目概述](docs/PROJECT.md)
-- [设计系统](docs/DESIGN.md)
+- [设计系统](docs/DESIGN.md) ← **Phase 1 已建立可复用组件库**
+- [AI 记忆文档](docs/AGENT_MEMORY.md) ← 重启会话时优先加载此文件
 - [游戏玩法](docs/GAMEPLAY.md)
 - [技术架构](docs/TECH.md)
 - [决策记录](docs/DECISIONS.md)
 - [社区指南](docs/COMMUNITY.md)
 - [路线图](docs/TODO.md)
+
+设计系统源码与展示：`design/system/` + `design/showcase/index.html`（可直接浏览器打开）。
 
 ## 贡献
 
