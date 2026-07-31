@@ -1,49 +1,25 @@
 # ============================================================
-# Unity / 团结引擎
+# Unreal Engine 5
 # ============================================================
 
-# 资源缓存（超大，每次合并卡死的元凶）
-/[Ll]ibrary/
-src/[Ll]ibrary/
+# 编译中间产物与构建输出
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
 
-# 临时文件
-/[Tt]emp/
-src/[Tt]emp/
-
-# 编译中间产物
-/[Oo]bj/
-src/[Oo]bj/
-
-# 构建输出
-/[Bb]uild/
-/[Bb]uilds/
-src/[Bb]uild/
-src/[Bb]uilds/
-
-# 日志
-/[Ll]ogs/
-src/[Ll]ogs/
-
-# 用户本地设置
-/[Uu]ser[Ss]ettings/
-src/[Uu]ser[Ss]ettings/
-
-# Visual Studio
-/.vs/
-/*.csproj
-/*.sln
-/*.unityproj
-/*.pidb
-/*.booproj
-/*.svd
-/*.pdb
-/*.mdb
-/*.opendb
-/*.VC.db
-/*.userprefs
-
-# Asset meta files（Unity 自动生成，保留）
-# !*.meta
+# IDE / 工程文件
+.vs/
+.vscode/
+*.sln
+*.xcodeproj
+*.xcworkspace
+*.code-workspace
+.idea/
+*.swp
+*.swo
+*~
 
 # ============================================================
 # 概念设计文档（可能涉及版权/侵权风险）
@@ -59,15 +35,6 @@ SESSION_LOG_*.md
 SESSION_LOG_*.txt
 
 # ============================================================
-# IDE
-# ============================================================
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# ============================================================
 # OS
 # ============================================================
 .DS_Store
@@ -79,11 +46,6 @@ Thumbs.db
 .tmp/
 /.opencode/
 opencode.json
-
-# ============================================================
-# miniaudio 构建产物
-# ============================================================
-src/audio/miniaudio/build/
 
 # ============================================================
 # 构建输出

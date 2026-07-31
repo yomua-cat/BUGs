@@ -28,6 +28,19 @@
 4. **开源协作** — GitHub 风格的贡献、审查、迭代
 5. **AI 友好** — 任何 AI 模型都能理解本仓库
 
+## 技术栈（2026-07-28 更新）
+
+| 项目 | 选型 | 说明 |
+|------|------|------|
+| 游戏引擎 | **Unreal Engine 5.6.1** | 源码开放、版税制、长期支持版本 |
+| 核心语言 | **C++20** | 性能、确定性、引擎深度集成 |
+| 脚本/原型 | Blueprint / Python | 编辑器自动化、快速验证 |
+| 音频引擎 | **Audio Mixer + Quartz + MetaSound** | 样本级时钟、量化播放、参数化音频 |
+| 谱面格式 | BUGs Chart Format v0.2 | JSON、AI 可读、可扩展 |
+| 自动化驱动 | **opencode + Flopperam MCP** | 全流程无 UI 开发 |
+| CI/CD | GitHub Actions + RunUAT | 多平台打包、自动化测试 |
+| 许可证 | MIT (游戏代码) / UE EULA (引擎) | 代码完全开源 |
+
 ## 设计语言
 
 借鉴：Microsoft Fluent（间距）、看门狗2（交互节奏）、Steam（组件组织）、终端排版（视觉语言）。

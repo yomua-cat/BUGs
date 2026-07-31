@@ -182,3 +182,31 @@
 - `IUIManager` 接口仅需 `ShowCombo`、`ShowPause`、`ShowResult`
 - 结算页组件独立开发，复用设计系统 `result` 组件
 - 练习模式可单独开启"实时准确率"显示（作为调试选项）
+
+---
+
+## #009 — 引擎迁移至 Unreal Engine 5.6.1，全流程 opencode 驱动
+
+**日期**：2026-07-28
+
+**决策**：放弃 Unity 6，采用 **Unreal Engine 5.6.1** 作为唯一引擎，全流程由 opencode + Flopperam MCP 驱动，不手写 Blueprint，不打开编辑器 UI。
+
+**理由**：
+- Unity 许可模式（座位订阅制、收入门槛强制升级、特定区域合规风险）与项目"开源 MIT + 可选商业化"长期目标冲突
+- UE 原生 Quartz + MetaSound + GAS 完美契合节奏游戏核心需求（样本级时钟、参数化音频、Fx 总线），消除 miniaudio 集成维护成本
+- 完整 C++ 源码访问权，音频/渲染管线可深度定制，不受引擎更新破坏
+- 版税制（前 $1M 免版税）对独立游戏风险更低
+- Flopperam MCP 提供 50+ 工具覆盖 Blueprint 全生命周期、UMG、MetaSound、Sequencer、PCG、GAS、运行时验证，opencode 可完全自主驱动
+- 5.6.1 为长期支持版本，稳定性与工具链成熟度最佳，Flopperam MCP 官方支持 5.5/5.6/5.7
+
+**备选方案**：
+- Unity 2022 LTS + miniaudio：短期交付快，但长期许可不确定性高、音频延迟优化受限
+- UE 4.27：Quartz 已完整，但无 MetaSound/GAS/PCG/CommonUI 现代工具链，移动端管线较旧
+- UE 5.8.0：版本过新，Flopperam MCP 等工具链未适配
+
+**未来影响**：
+- 核心模块需 C++ 重写（约 4 周核心闭环）
+- 团队建立 C++/Blueprint/opencode 开发规范
+- CI/CD 迁移至 RunUAT + Gauntlet
+- 设计系统 Token 映射至 Slate Style / UMG Theme
+- 移动端包体裁剪目标 <80MB (Shipping)

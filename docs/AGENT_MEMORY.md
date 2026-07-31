@@ -1,6 +1,6 @@
 # BUGs 项目现状记录
 
-**更新日期**：2026-07-27
+**更新日期**：2026-07-31
 
 > 这个文件记录了项目现在做到哪了。如果你隔了一段时间回来，先看这个快速回忆。
 
@@ -8,76 +8,102 @@
 
 ## 这个游戏是做什么的
 
-BUGs 是一款**节奏游戏（音游）**——就是跟着音乐节奏打拍子的那种游戏。
+BUGs 是一款**节奏游戏（音游）**——跟着音乐节拍操作，获得分数。
 
 一些特点：
 - 手机和电脑都能玩
 - 键盘、触屏、游戏手柄都能用（以后还能接 MIDI 乐器、太鼓）
-- 玩法简单：跟着节奏按，按准了得分
+- 玩法核心：判定点（XY + Z + Angle + Radius + Mode），自由轨道
 - 做这个游戏的所有代码都公开，谁都可以参与
+
+---
+
+## 核心技术栈
+
+| 项目 | 选型 | 说明 |
+|------|------|------|
+| 游戏引擎 | **Unreal Engine 5.6.1** | 2026-07-28 从 Unity 6 迁移过来 |
+| 核心语言 | **C++20** | 性能、确定性、引擎深度集成 |
+| 玩法脚本 | **Blueprint + GAS** | 可视化逻辑、Fx 总线 |
+| 音频引擎 | **Audio Mixer + Quartz + MetaSound** | 样本级时钟、量化播放、参数化音频 |
+| 谱面格式 | BUGs Chart Format v0.2 | JSON、AI 可读、可扩展 |
+| 自动化驱动 | **opencode + Flopperam MCP** | 全流程无 UI 开发 |
+| CI/CD | GitHub Actions + RunUAT | 多平台打包、自动化测试 |
+| 许可证 | MIT (游戏代码) / UE EULA (引擎) | 代码完全开源 |
 
 ---
 
 ## 已经做了什么
 
 ### 项目搭好了
-- 选好了用什么做游戏：Unity 6（游戏引擎）、C#（编程语言）、miniaudio（声音处理）
-- 搭好了项目文件结构
+- 选好了游戏引擎：Unreal Engine 5.6.1
 - 搭好了 GitHub 仓库
+- 配置了 opencode GitHub Actions（评论触发、PR Review、Issue Triage）
 
-### 游戏界面设计（这部分只在本地电脑上，不上传到 GitHub）
-- 定好了颜色、字体、间距这些视觉规则（叫"设计令牌"）
-- 做了一套界面组件库：按钮、输入框、开关、滑条等基础元件
-- 做了布局组件：页面面板、侧边抽屉、选项卡等
-- 做了展示组件：歌曲卡片、排行榜行、评分徽章等
-- 做了弹窗组件：提示消息、搜索框、弹窗、结算画面
-- 做了导航组件：顶栏、底栏、品牌 Logo
-- 写了对应这些组件的交互脚本（纯 JavaScript）
-- 做了一个组件展示页，可以看所有组件长什么样
-- 做了一个 Stage 概念原型（就是界面长什么样，体验一下感觉）
-  - **这个原型已冻结**：不再改了，因为已经够好了
+### 架构与接口
+- 写好了 7 个模块接口约定：`IAudioEngine`、`IChartReader`、`IFxBus`、`IInputSource`、`IJudgementSystem`、`IScoreManager`、`IUIManager`
+- 定义了谱面格式 v0.2：`judge_points`、`notes`、`events`、`fx`、自由坐标系、多判定点
+- 写了最小计分实现 `ScoreManager.cs`
+- 写了最小谱面读取实现 `ChartReader.cs`（**待适配 v0.2**：目前只解析了旧字段）
 
-### 游戏代码
-- 写好了所有模块之间的接口约定（6 个接口）
-- 写好了谱面格式规范和读取器（可以读谱面文件了）
-- 写好了计分系统（能算分了）
-- 但**判定系统还没写**——就是判断你按得准不准的那个核心逻辑
+### 设计系统（Web 原型阶段）
+- 设计令牌已最终确定：`design/system/tokens.css` 及 `tokens/` 拆分
+- 组件展示页和令牌可视化页已存在
+- Stage 启动序列概念原型已冻结：`design/mockups/boot-sequence.html`
+- 美术资源清单已确定：`design/REQUIRED_ART.md`
 
-### 项目文档
-- 写了各种文档：项目介绍、设计说明、技术架构、玩法说明、路线图、贡献指南等
+### 文档
+- 更新了项目概述、技术架构、路线图、玩法框架、视觉规格、决策记录等
+- 详细记录了引擎迁移理由：见 `docs/DECISIONS.md` #009
 
 ---
 
 ## 正在做什么
 
-现在的主要工作是：
+当前主要工作：
 
-1. **扩充组件库** — 把预留的空模板填上内容（更多组件、动效、视觉令牌）
-2. **不动 Stage 原型** — 之前那个界面原型已经完成，不再改了
-3. **在 Unity 里搭起来** — 游戏代码还没挂到 Unity 引擎里
+1. **UE5 核心原型验证（4 周）**
+   - Week 1：Quartz 音频时钟核心链路
+   - Week 2：判定系统 + Fx 总线（GAS Ability/Effect）
+   - Week 3：谱面运行时 + DataAsset
+   - Week 4：UMG 玩法组件 + Shipping Build 验收
+2. **填充设计系统组件库**：`design/system/components/`（6 个玩法组件优先）
+3. **填充动效模板**：`design/system/motion/`（4 个基础动效）
 
 ---
 
-## 还没做的（接下来要做的）
+## 还没做的（按优先级）
 
-按优先级排：
-
-1. 完成组件库的所有内容
-2. 做动效系统（让界面动起来，跟音乐节拍同步）
-3. 做 Home Player 验证（真正播放音乐，谱面能跑起来，能切歌）
-4. 把代码挂到 Unity 引擎里
-5. 写判定系统（判断你按得准不准）
-6. 写测试（单元测试、集成测试、端到端测试——现在都是空的）
+1. 把旧 C# 接口/实现迁移为 UE5 C++ 模块（新位置 Source/ 已有 UE5 工程）
+2. 适配 `ChartReader.cs` 到谱面格式 v0.2（或直接用 UE5 C++ 重写）
+3. 完成设计系统 `components/` 和 `motion/`
+4. 建立动效系统（让界面动起来，跟音乐节拍同步）
+5. 建立测试目录与测试脚手架
+6. 准备美术资源
+7. Flopperam MCP 接入验证
+8. 把设计系统 Token 映射到 UE5 UMG/Slate
 
 ---
 
 ## 几个重要的提醒
 
-- **设计系统目前只是网页原型**（用浏览器看的），以后要移植到 Unity
+- **引擎已经迁移到 UE5.6.1**：不要再按 Unity 思路新增代码
+- **`Source/` 目录已有 UE5 工程**，旧 `src/` 的 C# 代码需迁移为 C++ 或废弃重建
+- **设计系统目前只是 Web 原型**（浏览器里看），最终要映射到 UE5 UMG/Slate
 - **别再新建整页了**——所有新界面必须从组件库里拼出来
-- **美术资源**：开始做 Unity 界面之前，先确认需要的图片、字体、图标都到位了
-- **design/ 和 docs/design/ 只在本地**：里面是设计源码和设计文档，不上传到 GitHub，避免版权问题
+- **美术资源**：开始 UE5 实现前，先确认 `REQUIRED_ART.md` 里的资源到位
+- **`design/`、`docs/design/`、`docs/GAMEPLAY_VISUAL_SPEC.md` 只在本地**：被 `.gitignore` 忽略，不上传 GitHub，避免版权问题
 - **代码风格**：追求简洁、能删就删、能用现成的就不自己写
+
+---
+
+## 已知问题 / 需要你确认的事
+
+1. **旧 C# 接口如何迁移到 UE5 C++？**——逐步重写为 C++ 接口，还是直接废弃重建？
+2. **`ChartReader.cs` 还是 v0.1 实现**——是否需要先更新到 v0.2，还是等 UE5 工程建好后再重写？
+3. **`tests/` 完全为空**——是否要先搭测试脚手架？
+4. **`assets/` 完全为空**——是否已有美术资源在别处，还是需要开始制作？
+5. **`design/system/components/` 和 `motion/` 是空目录**——是否优先填充这些 Web 组件？
 
 ---
 
@@ -85,25 +111,47 @@ BUGs 是一款**节奏游戏（音游）**——就是跟着音乐节奏打拍�
 
 ```
 /
-├── docs/          ← 文档（都在这里）
-│   ├── PROJECT.md           ← 项目概述
-│   ├── GAMEPLAY.md          ← 玩法说明
-│   ├── TECH.md              ← 技术架构
-│   ├── DECISIONS.md         ← 重要决策记录
-│   ├── TODO.md              ← 路线图
-│   ├── COMMUNITY.md         ← 社区指南
-│   ├── AGENT_MEMORY.md      ← 就是本文件
-│   └── design/              ← 设计文档（本地-only，不上传）
-│       ├── DESIGN.md            ← 设计系统说明
-│       ├── DESIGN_TOKEN_SPEC.md ← 设计令牌规范（不准再改了）
-│       └── BOOT_SEQUENCE_CONCEPT.md ← 界面原型说明
-├── design/        ← 界面设计源码（本地-only，不上传）
-├── src/           ← 游戏源代码
-│   ├── core/Interfaces/     ← 模块接口约定
-│   ├── chart/               ← 谱面相关
-│   ├── gameplay/            ← 玩法相关（计分等）
-│   └── Assets/              ← Unity 工程文件（空）
-└── tests/         ← 测试（空）
+├── .github/               ← GitHub Actions 工作流
+│   └── workflows/
+│       ├── opencode.yml
+│       ├── opencode-review.yml
+│       └── opencode-triage.yml
+├── assets/                ← 游戏美术/音频资源（目前为空）
+├── design/                ← 界面设计源码（本地-only，不上传）
+│   ├── README.md
+│   ├── REQUIRED_ART.md
+│   ├── mockups/
+│   │   └── boot-sequence.html       ← 已冻结的 Stage 原型
+│   ├── showcase/
+│   │   ├── index.html               ← 组件展示页
+│   │   └── tokens.html              ← 令牌可视化
+│   ├── stage-expected-effects.md
+│   └── system/
+│       ├── tokens.css               ← 设计令牌入口
+│       ├── tokens/                  ← 颜色、字体、间距、动效等
+│       ├── components/              ← 玩法/通用组件模板（空，待填充）
+│       └── motion/                  ← 动效模板（空，待填充）
+├── docs/                  ← 文档
+│   ├── PROJECT.md
+│   ├── GAMEPLAY.md
+│   ├── GAMEPLAY_VISUAL_SPEC.md      ← 视觉规格（本地-only）
+│   ├── TECH.md
+│   ├── TODO.md
+│   ├── FORMAT.md           ← 谱面格式 v0.2
+│   ├── DECISIONS.md
+│   ├── CONTRIBUTING.md
+│   ├── AGENT_MEMORY.md              ← 就是本文件
+│   └── design/                      ← 设计文档（本地-only）
+│       ├── DESIGN.md
+│       ├── DESIGN_TOKEN_SPEC.md
+│       └── BOOT_SEQUENCE_CONCEPT.md
+├── Source/                ← UE5 C++ 源代码（已创建）
+│   └── BUGs/                        ← 模块源码（待填充）
+├── Content/               ← UE5 内容资产（目前为空）
+├── Config/                ← UE5 项目配置
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
 ---
@@ -112,8 +160,10 @@ BUGs 是一款**节奏游戏（音游）**——就是跟着音乐节奏打拍�
 
 - **追求简洁**：能删就删，能用现成的就不自己写
 - **用 gh 命令操作 GitHub**：不手动提交
-- 每个改动只做一件事
+- **每个改动只做一件事**
+- **接口先行**：新增模块先写接口，再写实现
+- **文档同步**：接口或架构变更必须同步更新 `AGENT_MEMORY.md` 和相关文档
 
 ---
 
-**最后更新**：2026-07-27（设计文档移至 docs/design/ 本地-only，组件库扩充中）
+**最后更新**：2026-07-31（整理目录结构、识别 UE5 迁移缺口、标记待确认问题）
