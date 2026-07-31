@@ -37,7 +37,9 @@ BUGs 是一款**节奏游戏（音游）**——跟着音乐节拍操作，获�
 
 ### 项目搭好了
 - 选好了游戏引擎：Unreal Engine 5.6.1
-- 搭好了 GitHub 仓库
+- 本地工程路径：`/Users/yomua/Documents/code/BUGs`
+- 远程仓库：`https://github.com/yomua-cat/BUGs`
+- 搭好了 GitHub 仓库并重新绑定
 - 配置了 opencode GitHub Actions（评论触发、PR Review、Issue Triage）
 
 ### 架构与接口
@@ -54,6 +56,7 @@ BUGs 是一款**节奏游戏（音游）**——跟着音乐节拍操作，获�
 
 ### 文档
 - 更新了项目概述、技术架构、路线图、玩法框架、视觉规格、决策记录等
+- 更新了 `README.md` 说明当前项目位置、结构、状态与已知缺口
 - 详细记录了引擎迁移理由：见 `docs/DECISIONS.md` #009
 
 ---
